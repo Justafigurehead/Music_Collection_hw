@@ -2,7 +2,7 @@ require('pg')
 require_relative('../db/SqlRunner')
 
 class Album
-attr_reader :title, :genre, :id, :artist_id
+attr_accessor :title, :genre, :id, :artist_id
 
   def initialize ( options )
     @title = options['title']
@@ -18,6 +18,15 @@ attr_reader :title, :genre, :id, :artist_id
     return "You have successfully saved an album."
   end
 
+  def delete()
+    sql = "DELETE FROM albums WHERE id = #{@id}"
+    SqlRunner.run(sql)
+  end
+
+  def update()
+    sql = "UPDATE artists SET (title, genre, artist_id) = ('#{@title}', '#{@genre}','#{@artist_id}') WHERE id = #{id};"
+    SqlRunner.run(sql)   
+  end
   
   def artist()
     sql = "SELECT * FROM artists WHERE id = #{@artist_id};"
