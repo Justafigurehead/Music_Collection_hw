@@ -2,6 +2,7 @@ require('pg')
 require_relative('../db/SqlRunner')
 
 class Album
+attr_reader :title, :genre, :id, :artist_id
 
   def initialize ( options )
     @title = options['title']
@@ -17,6 +18,15 @@ class Album
     return "You have successfully saved an album."
   end
 
+  
+  def artist()
+    sql = "SELECT * FROM artists WHERE id = #{@artist_id};"
+    result = SqlRunner.run(sql)
+
+    album_artist_name = result.map{|artist| Artist.new(artist)}
+    return album_artist_name.first
+  end
+
 
   def self.all()
 
@@ -26,12 +36,10 @@ class Album
     return all_albums
   end
 
-  def artist()
-    sql = "SELECT * FROM artists WHERE id = #{@artist_id};"
-    result = SqlRunner.run(sql)
-
-    album_artist_name = result.map{|artist| Artist.new(artist)}
-    return album_artist_name
+  def self.delete_all()
+    sql = "DELETE FROM albums;"
+    SqlRunner.run(sql)
+    return "You have deleted all your albums, I hope that was on purpose."
   end
 
 
